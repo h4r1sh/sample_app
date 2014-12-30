@@ -12,10 +12,15 @@
 require 'rails_helper'
 
 describe User do
-  before { @user = User.new(name: "H", email: "h@example.com")  }
+  before { @user = User.new(name: "H", email: "h@example.com", password: "helper", password_confirmation: "helper")  }
   subject { @user }
+
   it { should respond_to(:name) }
   it { should respond_to(:email) }
+  it { should respond_to(:password_digest)}
+  it { should respond_to(:password) }
+  it { should respond_to(:password_confirmation) }
+  it { should respond_to(:authenticate) }
 
   it { should be_valid }
 
@@ -62,5 +67,31 @@ describe User do
     end
     it {should_not be_valid}
   end
+
+  describe "when password is blank" do
+    before { @user.password = @user.password_confirmation = ' '}
+    it { should_not be_valid }
+  end
+
+  describe "when password is not same as it's confirmation" do
+    before { @user.password_confirmation = 'nothing' }
+    it { should_not be_valid }
+  end
+
+  describe "password authentication" do
+    before { @user.save }
+    let(:found_user) { User.find_by_email(@user.email) }
+
+    describe "valid pass" do
+      it { should == found_user.authenticate(@user.password) }
+    end
+
+  end
+
+   describe "with a password that's too short" do
+    before { @user.password = @user.password_confirmation = "a" * 5 }
+    it { should be_invalid }
+  end
+
   
 end
