@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'capybara'
 gem 'bootstrap-sass', '2.1'
 gem 'bcrypt-ruby', '3.0.0'
+gem 'factory_girl_rails'
 
 
 # Gems used only for assets and not required
